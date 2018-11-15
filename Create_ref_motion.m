@@ -51,7 +51,6 @@ Cdd = @(t,t0,tf) [                          -(60*(t - t0).*(t - tf).*(t0 - 2*t +
                                              (60*(t - t0).*(t - tf).*(t0 - 2*t + tf))/(t0 - tf)^5, ...
                                          (12*(t - t0).*(t - tf).*(3*t0 - 5*t + 2*tf))/(t0 - tf)^4, ...
                   -((t - t0).*(10*t.^2 - 8*t*t0 - 12*t*tf + t0^2 + 6*t0*tf + 3*tf^2))/(t0 - tf)^3];
- 
                
 % First part of the motion
 t{1} = [t_vec(1):dt:t_vec(2),t_vec(2)+dt:dt:t_vec(2)+Dt];
