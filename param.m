@@ -3,7 +3,7 @@
 % The parameters are (directly) used in AnimSys.m, GenTorq.m, GrdFunc01.m,
 % GrdFunc10.m, InvKin.m, and MassMat.m.
 
-global m1 m2 m3 I1o I2o I3o I4o L1 L2 L3 L4 w3 w4 ck cd Dx Dy 
+global m1 m2 m3 I1o I2o I3o I4o L1 L2 L3 L4 w3 w4 d3 c3x c3y ck cd Dx Dy 
 
 %---- Link 1 -------------------------------------------------------------%
 m1 = 4;
@@ -20,7 +20,9 @@ m3 = 2;
 L3 = 0.15;
 I3 = 0.005;
 w3 = 0.15;
-
+d3 = 0.3;
+c3x = 0.6;
+c3y = 0.3;
 %---- Link 4 -------------------------------------------------------------%
 L4  = 0.8;
 w4  = 0.04;
@@ -34,4 +36,4 @@ Dy  = 0.35;
 %---- Effective inertias -------------------------------------------------%
 I1o = I1 + 1/4*m1*L1^2 + m2*L1^2 + m3*L1^2;
 I2o = I2 + 1/4*m2*L2^2 + m3*L2^2;
-I3o = I3 + 1/4*m3*L3^2;
+I3o = I3 + m3*((L3-c3x)^2 + c3y^2);
