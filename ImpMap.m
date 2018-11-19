@@ -37,7 +37,6 @@ if min(Lambda) < 0
     Lambda
     error('Infeasible impact')
 end
-x_plus = [q_min;qd_plus]; 
-
+x_plus = [q_min;qd_plus];
 
 end

@@ -1,4 +1,3 @@
-
 % Chosen parameters for the planar RRR robot and door (link 4).
 % The parameters are (directly) used in AnimSys.m, GenTorq.m, GrdFunc01.m,
 % GrdFunc10.m, InvKin.m, and MassMat.m.
@@ -23,6 +22,7 @@ w3 = 0.15;
 d3 = 0.3;
 c3x = 0.6;
 c3y = 0.3;
+
 %---- Link 4 -------------------------------------------------------------%
 L4  = 0.8;
 w4  = 0.04;

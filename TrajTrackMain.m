@@ -101,7 +101,6 @@ PlotHybTraj({ref_traj_ext,ref_traj},signals,grd,options)
 % figure(3)
 % AnimSysWRef(ref_traj.t,ref_traj.x,traj_trc.t,traj_trc.x,1)
 
-
 % Compute constraint forces
 % figure(4)
 % for i = 1:length(traj_trc.t)
