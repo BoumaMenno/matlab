@@ -55,18 +55,23 @@ hybsys.g  = {[], g12, g13, g14;
 
 % Define the input (for creating the reference)
 Ka = [1^2*eye(3),[0;0;0],2*1*eye(3),[0;0;0]];
+ff = {@(t,x,~) interp1(t_ref{1},mu{1},t).', ...
+      @(t,x,~) interp1(t_ref{1},mu{1},t).', ...
+      @(t,x,~) interp1(t_ref{1},mu{1},t).', ...
+      @(t,x,~) interp1(t_ref{2},mu{2},t).'};         % control input for each mode
+
 cntrl = {@(t,x,~) interp1(t_ref{1},mu{1},t).'-Ka*(x-interp1(t_ref{1},[q_ref{1},qd_ref{1}],t).'), ...
          @(t,x,~) interp1(t_ref{1},mu{1},t).'-Ka*(x-interp1(t_ref{1},[q_ref{1},qd_ref{1}],t).'), ...
          @(t,x,~) interp1(t_ref{1},mu{1},t).'-Ka*(x-interp1(t_ref{1},[q_ref{1},qd_ref{1}],t).'), ...
          @(t,x,~) interp1(t_ref{2},mu{2},t).'-Ka*(x-interp1(t_ref{2},[q_ref{2},qd_ref{2}],t).')};         % control input for each mode
       
 % Simulate the system
-ref_traj = HybridSim(hybsys,cntrl,t0:dt:T,x0,1);
-optionsExt.dom = 'T';
-optionsExt.T   = 0.3;
-optionsExt.dt  = dt;
-cntrl{4} = @(t,x,~) interp1(t_ref{2},mu{2},t).'+Ka*(x-interp1(t_ref{2},[q_ref{2},qd_ref{2}],t).');
-ref_traj_ext = ExtndHybTraj(ref_traj,hybsys,cntrl,optionsExt);
+ref_traj = HybridSim(hybsys,ff,t0:dt:T,x0,1);
+% optionsExt.dom = 'T';
+% optionsExt.T   = 0.3;
+% optionsExt.dt  = dt;
+% cntrl{4} = @(t,x,~) interp1(t_ref{2},mu{2},t).'+Ka*(x-interp1(t_ref{2},[q_ref{2},qd_ref{2}],t).');
+% ref_traj_ext = ExtndHybTraj(ref_traj,hybsys,cntrl,optionsExt);
 
 % Simulate tracking of the reference
 % mu           = @(t,s) interp1(ref_traj_ext.t{s},ref_traj_ext.u{s},t).';                     % feedforward
@@ -78,25 +83,26 @@ ref_traj_ext = ExtndHybTraj(ref_traj,hybsys,cntrl,optionsExt);
 % traj_trc     = HybridSim(hybsys,cntrl_trc,t0:dt:T,x0e,1);
 
 % % Plot results
-options.linecolor       = {1/256*[200 25 25],1/256*[200 25 25]};
-options.linestyle       = {':','-'};
-options.labels          = {'$u$','$x_1$','$x_2$'};
-options.legend          = {'ref ext','ref'};
-options.evntlines       = 1;
-options.cntrbar         = [0;1];
-options.cntr            = 'num';
-options.barcolor        = [1/256*[0 102 204];1/256*[0 162 222];1/256*[132 210 0];1/256*[206 223 0]];
-options.marker          = {'none','none';'.','.';'.','.'};
-options.markersize      = [7*ones(3,1),7*ones(3,1)];
+% options.linecolor       = {1/256*[200 25 25],1/256*[200 25 25]};
+% options.linestyle       = {':','-'};
+% options.labels          = {'$u$','$x_1$','$x_2$'};
+% options.legend          = {'ref ext','ref'};
+% options.evntlines       = 1;
+% options.cntrbar         = [0;1];
+% options.cntr            = 'num';
+% options.barcolor        = [1/256*[0 102 204];1/256*[0 162 222];1/256*[132 210 0];1/256*[206 223 0]];
+% options.marker          = {'none','none';'.','.';'.','.'};
+% options.markersize      = [7*ones(3,1),7*ones(3,1)];
+% 
+% signals.x = [1,2];
+% signals.u = 1;
+% grd = [3,1];
+% 
+% figure(2)
+% PlotHybTraj({ref_traj_ext,ref_traj},signals,grd,options)
 
-signals.x = [1,2];
-signals.u = 1;
-grd = [3,1];
-
-figure(2)
-PlotHybTraj({ref_traj_ext,ref_traj},signals,grd,options)
-
-% AnimSys(ref_traj.t,ref_traj.x,1)
+figure(3)
+AnimSys(ref_traj.t,ref_traj.x,1)
 % AnimSys(traj_trc.t,traj_trc.x,1)
 % figure(3)
 % AnimSysWRef(ref_traj.t,ref_traj.x,traj_trc.t,traj_trc.x,1)

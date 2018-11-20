@@ -19,8 +19,8 @@ q3 = q(3);  qd3 = qd(3);
 q4 = q(4);  qd4 = qd(4);
 
 a = @(p) m3*(c3y*cos(p) - (L3-c3x)*sin(p));
-h1 = -L1*L2*sin(q2)*(m2/2+m3)*qd2^2 - L1*L2*(m2/2+m3)*sin(q2)*2*qd1*qd2 - L1*a(q2+q3)*((qd1+qd2+qd3)^2-qd1^2) + L2*a(q3)*((qd3)^2+2*qd1*qd3+2*qd2*qd3);
-h2 =  L1*L2*sin(q2)*(m2/2+m3)*qd1^2 -L1*a(q2+q3)*qd1^2 + L2*a(q2+q3)*((qd3)^2 +2*qd1*qd3 + 2*qd2*qd3);
+h1 = -.5*L1*L2*sin(q2)*(m2+2*m3)*(qd2^2 + 2*qd1*qd2) - L1*a(q2+q3)*((qd1+qd2+qd3)^2-qd1^2) + L2*a(q3)*((qd3)^2+2*qd1*qd3+2*qd2*qd3);
+h2 =  .5*L1*L2*sin(q2)*(m2+2*m3)*qd1^2 -L1*a(q2+q3)*qd1^2 + L2*a(q2+q3)*((qd3)^2 +2*qd1*qd3 + 2*qd2*qd3);
 h3 = -L1*a(q2+q3)*qd1^2 - L2*a(q3)*(qd1+qd2)^2;
 h4 = cd*qd4 + ck*q4;
 
