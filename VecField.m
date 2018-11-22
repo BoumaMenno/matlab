@@ -13,7 +13,7 @@ function [xdot,lambda] = VecField(x,u,act01,act10)
 %--------------------------------------------------------------------------
 
 % Parameter
-wn    = 100;
+wn    = 20;
 
 % Construct components equations of motion
 q     = x(1:4);

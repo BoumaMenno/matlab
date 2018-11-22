@@ -21,9 +21,9 @@ D   = (o2x^2 + o2y^2 - L1^2 - L2^2)/(2*L1*L2);
 if abs(D) > 1
     D = NaN;
 end
-q1 = atan2(o2y,o2x)-atan2(-L2*sqrt(1-D^2),L1+L2*D);
-q2 = atan2(-sqrt(1-D^2),D);
-q3 = th-atan2(o2y,o2x)+atan2(-L2*sqrt(1-D^2),L1+L2*D)-atan2(-sqrt(1-D^2),D);
+q1 = atan2(o2y,o2x)-atan2(L2*sqrt(1-D^2),L1+L2*D);
+q2 = atan2(sqrt(1-D^2),D);
+q3 = th-atan2(o2y,o2x)+atan2(L2*sqrt(1-D^2),L1+L2*D)-atan2(sqrt(1-D^2),D);
 
 qR = [q1;q2;q3];
 
