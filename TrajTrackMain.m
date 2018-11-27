@@ -102,7 +102,7 @@ ref_traj = HybridSim(hybsys,ff,t0:dt:T,x0,1);
 % PlotHybTraj({ref_traj_ext,ref_traj},signals,grd,options)
 
 figure(3)
-AnimSys(ref_traj.t,ref_traj.x,1)
+AnimSys(ref_traj.t,ref_traj.x,1,'reference_without_release')
 % AnimSys(traj_trc.t,traj_trc.x,1)
 % figure(3)
 % AnimSysWRef(ref_traj.t,ref_traj.x,traj_trc.t,traj_trc.x,1)

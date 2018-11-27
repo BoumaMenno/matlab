@@ -11,23 +11,20 @@ y{1}  = [0.65,  0,        0;
          0.45,  Dy-w4/2,  pi/2;
          0.35,  1.35*Dy,  pi/1.5];  % Position and orientation of the end-effector at beginning, impact, and end of (extended) phase 1
                                     % The door/plank is assumed to be at rest during this phase 
-y{2}  = [0,   NaN;
-         0.4, pi/5];               % Position of the end-effector along the door and angle q4 at the beginning and end of (extended) phase 2. The begin position for q4 is not used, but is chosen such that the contact forces remain positive.
+y{2}  = [0.4, pi/5];               % Position of the end-effector along the door and angle q4 at the beginning and end of (extended) phase 2. The begin position for q4 is not used, but is chosen such that the contact forces remain positive.
                                     % The post-impact position is determined from phase 1 for consistency
 v{1}  = [0,     0,     0
          -0.15, 0.45,  -1;
          -0.15, 1.2,  0];          % (Trans. and rot.) velocity of the end-effector at beginning, impact, and end of (extended) phase 1
                                     % The door/plank is assumed to be at rest during this phase
-v{2}  = [0.2, NaN;
-            0,   0];                     % Velocity of the end-effector along the door and dq4/dt at the beginning and end of (extended) phase 2. The begin velocity for q4 is not used, but is chosen such that the contact forces remain positive.
+v{2}  = [0,   0];                     % Velocity of the end-effector along the door and dq4/dt at the beginning and end of (extended) phase 2. The begin velocity for q4 is not used, but is chosen such that the contact forces remain positive.
                                     % The post-impact speed is determined from phase 1 using the impact map (for consistency) 
 
 a{1}  = [0,     0,    0;
          -0.03, 2.5,  -.25;
          0,     0,    0];           % (Trans. and rot.) acceleration of the end-effector at beginning, impact, and end of (extended) phase 1
 % a{1}(2,2) = 3;
-a{2}  = [0,  NaN;
-         -2, 0];                      % Acceleration of the end-effector along the door and d2q4/dt2 at the beginning and end of (extended) phase 2. The begin acc for q4 is not used, but is chosen such that the contact forces remain positive.                                    % Continuity of the x component of the 2d acceleration is used to compute the post impact acc. 
+a{2}  = [-2, 0];                      % Acceleration of the end-effector along the door and d2q4/dt2 at the beginning and end of (extended) phase 2. The begin acc for q4 is not used, but is chosen such that the contact forces remain positive.                                    % Continuity of the x component of the 2d acceleration is used to compute the post impact acc. 
 
 qdd4_pi  = 2;                       % Post-impact angular acceleration of the door 
 qddd4_pi = 0;                     % Post-impact angular jerk of the door
@@ -85,18 +82,18 @@ a_pi = (Je4*qdd_min + [-L1*(qd1-qd4)^2*cos(q1-q4)-L2*(qd1+qd2-qd4)^2*cos(q1+q2-q
 a_pi(2) = qdd4_pi;
 
 % Second part of the motion
-t{2} = [t_vec(2)-Dt:dt:t_vec(2)-dt,t_vec(2):dt:t_vec(3)];
-Y2    = C((t_vec(2)-Dt:dt:t_vec(2)-dt).',t_vec(2)-Dt,t_vec(2))*[y{2}(1,:);v{2}(1,:);a{2}(1,:);y_pi;v_pi;a_pi];
-Yd2   = Cd((t_vec(2)-Dt:dt:t_vec(2)-dt).',t_vec(2)-Dt,t_vec(2))*[y{2}(1,:);v{2}(1,:);a{2}(1,:);y_pi;v_pi;a_pi];
-Ydd2  = Cdd((t_vec(2)-Dt:dt:t_vec(2)-dt).',t_vec(2)-Dt,t_vec(2))*[y{2}(1,:);v{2}(1,:);a{2}(1,:);y_pi;v_pi;a_pi];
-t_part = (-Dt:dt:-dt).';
-Y2(:,2)   = [ones(length(t_part),1), t_part,0.5*t_part.^2,1/6*t_part.^3]*[y_pi(2);v_pi(2);qdd4_pi;qddd4_pi]; 
-Yd2(:,2)  = [zeros(length(t_part),1),ones(length(t_part),1),t_part,1/2*t_part.^2]*[y_pi(2);v_pi(2);qdd4_pi;qddd4_pi];
-Ydd2(:,2) = [zeros(length(t_part),1),zeros(length(t_part),1),ones(length(t_part),1),t_part]*[y_pi(2);v_pi(2);qdd4_pi;qddd4_pi];
+t{2} = [t_vec(2):dt:t_vec(3)];
+% Y2    = C((t_vec(2)-Dt:dt:t_vec(2)-dt).',t_vec(2)-Dt,t_vec(2))*[y{2}(1,:);v{2}(1,:);a{2}(1,:);y_pi;v_pi;a_pi];
+% Yd2   = Cd((t_vec(2)-Dt:dt:t_vec(2)-dt).',t_vec(2)-Dt,t_vec(2))*[y{2}(1,:);v{2}(1,:);a{2}(1,:);y_pi;v_pi;a_pi];
+% Ydd2  = Cdd((t_vec(2)-Dt:dt:t_vec(2)-dt).',t_vec(2)-Dt,t_vec(2))*[y{2}(1,:);v{2}(1,:);a{2}(1,:);y_pi;v_pi;a_pi];
+% t_part = (-Dt:dt:-dt).';
+% Y2(:,2)   = [ones(length(t_part),1), t_part,0.5*t_part.^2,1/6*t_part.^3]*[y_pi(2);v_pi(2);qdd4_pi;qddd4_pi]; 
+% Yd2(:,2)  = [zeros(length(t_part),1),ones(length(t_part),1),t_part,1/2*t_part.^2]*[y_pi(2);v_pi(2);qdd4_pi;qddd4_pi];
+% Ydd2(:,2) = [zeros(length(t_part),1),zeros(length(t_part),1),ones(length(t_part),1),t_part]*[y_pi(2);v_pi(2);qdd4_pi;qddd4_pi];
 
-Y2    = [Y2;C((t_vec(2):dt:t_vec(3)).',t_vec(2),t_vec(3))*[y_pi;v_pi;a_pi;y{2}(1,:);v{2}(1,:);a{2}(1,:)]]; 
-Yd2   = [Yd2;Cd((t_vec(2):dt:t_vec(3)).',t_vec(2),t_vec(3))*[y_pi;v_pi;a_pi;y{2}(1,:);v{2}(1,:);a{2}(1,:)]];
-Ydd2  = [Ydd2;Cdd((t_vec(2):dt:t_vec(3)).',t_vec(2),t_vec(3))*[y_pi;v_pi;a_pi;y{2}(1,:);v{2}(1,:);a{2}(1,:)]];
+Y2    = [C((t_vec(2):dt:t_vec(3)).',t_vec(2),t_vec(3))*[y_pi;v_pi;a_pi;y{2}(1,:);v{2}(1,:);a{2}(1,:)]]; 
+Yd2   = [Cd((t_vec(2):dt:t_vec(3)).',t_vec(2),t_vec(3))*[y_pi;v_pi;a_pi;y{2}(1,:);v{2}(1,:);a{2}(1,:)]];
+Ydd2  = [Cdd((t_vec(2):dt:t_vec(3)).',t_vec(2),t_vec(3))*[y_pi;v_pi;a_pi;y{2}(1,:);v{2}(1,:);a{2}(1,:)]];
 
 q{2}  = zeros(length(t{2}),4);      qd{2} = q{2};       qdd{2} = q{2};
 for i = 1:length(t{2})
