@@ -92,7 +92,7 @@ cmap = colormap(lines);
 col = [1,1,1];
 
 % Animate
-close all;  figure
+figure
 for ii = 1:length(t)
     clf('reset')
     set(gcf,'Color','w')

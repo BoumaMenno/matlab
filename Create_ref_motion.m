@@ -4,27 +4,28 @@ clear; close all; clc;
 param
 
 % Set motion parameters
-t_vec = [0,1,2];                    % Start time, impact time, end time
+t_vec = [0,2,4];                    % Start time, impact time, end time
 dt    = 0.001;                      % Time step
 Dt    = 0.5;                        % Extension time
-y{1}  = [0.65,  0,        0; 
+
+y{1}  = [0.55,  0,        0; 
          0.45,  Dy-w4/2,  pi/2;
-         0.35,  1.35*Dy,  pi/1.5];  % Position and orientation of the end-effector at beginning, impact, and end of (extended) phase 1
+         0.25,  1.5*Dy,  pi/1.5];  % Position and orientation of the end-effector at beginning, impact, and end of (extended) phase 1
                                     % The door/plank is assumed to be at rest during this phase 
 y{2}  = [0,   NaN;
          0.4, pi/5];               % Position of the end-effector along the door and angle q4 at the beginning and end of (extended) phase 2. The begin position for q4 is not used, but is chosen such that the contact forces remain positive.
                                     % The post-impact position is determined from phase 1 for consistency
 v{1}  = [0,     0,     0
-         -0.15, 0.45,  -1;
-         -0.15, 1.2,  0];          % (Trans. and rot.) velocity of the end-effector at beginning, impact, and end of (extended) phase 1
+         -0.15, 0.3,  -1;
+         -1,     .5,  0];          % (Trans. and rot.) velocity of the end-effector at beginning, impact, and end of (extended) phase 1
                                     % The door/plank is assumed to be at rest during this phase
 v{2}  = [0.2, NaN;
             0,   0];                     % Velocity of the end-effector along the door and dq4/dt at the beginning and end of (extended) phase 2. The begin velocity for q4 is not used, but is chosen such that the contact forces remain positive.
                                     % The post-impact speed is determined from phase 1 using the impact map (for consistency) 
 
-a{1}  = [0,     0,    0;
-         -0.03, 2.5,  -.25;
-         0,     0,    0];           % (Trans. and rot.) acceleration of the end-effector at beginning, impact, and end of (extended) phase 1
+a{1}  = [0,      0,    0;
+         -0.03,  1,  -.25;
+         -0.05,     1,    0];           % (Trans. and rot.) acceleration of the end-effector at beginning, impact, and end of (extended) phase 1
 % a{1}(2,2) = 3;
 a{2}  = [0,  NaN;
          -2, 0];                      % Acceleration of the end-effector along the door and d2q4/dt2 at the beginning and end of (extended) phase 2. The begin acc for q4 is not used, but is chosen such that the contact forces remain positive.                                    % Continuity of the x component of the 2d acceleration is used to compute the post impact acc. 
@@ -140,33 +141,47 @@ t_ref   = t;    q_ref   = q;    qd_ref  = qd;   qdd_ref = qdd;
 save ref_motion.mat t_ref q_ref qd_ref qdd_ref mu lambda
 clearvars t_ref q_ref qd_ref qdd_ref
 
-% Plot results
-figure
-plot(t{1},Y(:,1),t{1},Yd(:,1),t{1},Ydd(:,1))
-title('$x$','Interpreter','Latex')
-xlabel('$t$','Interpreter','Latex')
-legend('pos','vel','acc')
+t1p = (1/dt)*(t_vec(2)-t_vec(1))+1;
+t2p = (1/dt)*(t_vec(3)-t_vec(2))+1;
+tpext = (1/dt)*Dt;
+
+% % Plot results
+% figure
+% plot(t{1}(1:t1p),Y(1:t1p,1),'-r',t{1}(1:t1p),Yd(1:t1p,1),'-b',t{1}(1:t1p),Ydd(1:t1p,1),'-g')
+% hold on
+% plot(t{1}(t1p:t1p+tpext),Y(t1p:t1p+tpext,1),'--r',t{1}(t1p:t1p+tpext),Yd(t1p:t1p+tpext,1),'--b',t{1}(t1p:t1p+tpext),Ydd(t1p:t1p+tpext,1),'--g')
+% title('$x$','Interpreter','Latex')
+% xlabel('$t$','Interpreter','Latex')
+% legend('pos','vel','acc')
+% 
+% figure
+% plot(t{1}(1:t1p),Y(1:t1p,2),'-r',t{1}(1:t1p),Yd(1:t1p,2),'-b',t{1}(1:t1p),Ydd(1:t1p,2),'-g')
+% hold on
+% plot(t{1}(t1p:t1p+tpext),Y(t1p:t1p+tpext,2),'--r',t{1}(t1p:t1p+tpext),Yd(t1p:t1p+tpext,2),'--b',t{1}(t1p:t1p+tpext),Ydd(t1p:t1p+tpext,2),'--g')
+% title('$y$','Interpreter','Latex')
+% xlabel('$t$','Interpreter','Latex')
+% legend('pos','vel','acc')
+% 
+% figure
+% plot(t{1}(1:t1p),Y(1:t1p,3),'-r',t{1}(1:t1p),Yd(1:t1p,3),'-b',t{1}(1:t1p),Ydd(1:t1p,3),'-g')
+% hold on
+% plot(t{1}(t1p:t1p+tpext),Y(t1p:t1p+tpext,3),'--r',t{1}(t1p:t1p+tpext),Yd(t1p:t1p+tpext,3),'--b',t{1}(t1p:t1p+tpext),Ydd(t1p:t1p+tpext,3),'--g')
+% title('$\theta$','Interpreter','Latex')
+% xlabel('$t$','Interpreter','Latex')
+% legend('pos','vel','acc')
 
 figure
-plot(t{1},Y(:,2),t{1},Yd(:,2),t{1},Ydd(:,2))
-title('$y$','Interpreter','Latex')
-xlabel('$t$','Interpreter','Latex')
-legend('pos','vel','acc')
-
-figure
-plot(t{1},Y(:,3),t{1},Yd(:,3),t{1},Ydd(:,3))
-title('$\theta$','Interpreter','Latex')
-xlabel('$t$','Interpreter','Latex')
-legend('pos','vel','acc')
-
-figure
-plot(t{2},Y2(:,1),t{2},Yd2(:,1),t{2},Ydd2(:,1))
+plot(t{2}(tpext+1:t2p),Y2(tpext+1:t2p,1),'-r',t{2}(tpext+1:t2p),Yd2(tpext+1:t2p,1),'-b',t{2}(tpext+1:t2p),Ydd2(tpext+1:t2p,1),'-g')
+hold on
+plot(t{2}(1:tpext+1),Y2(1:tpext+1,1),'--r',t{2}(1:tpext+1),Yd2(1:tpext+1,1),'--b',t{2}(1:tpext+1),Ydd2(1:tpext+1,1),'--g')
 title('$o_{3,x}^{4}$','Interpreter','Latex')
 xlabel('$t$','Interpreter','Latex')
 legend('pos','vel','acc')
 
 figure
-plot(t{2},Y2(:,2),t{2},Yd2(:,2),t{2},Ydd2(:,2))
+plot(t{2}(tpext+1:t2p),Y2(tpext+1:t2p,2),'-r',t{2}(tpext+1:t2p),Yd2(tpext+1:t2p,2),'-b',t{2}(tpext+1:t2p),Ydd2(tpext+1:t2p,2),'-g')
+hold on
+plot(t{2}(1:tpext+1),Y2(1:tpext+1,2),'--r',t{2}(1:tpext+1),Yd2(1:tpext+1,2),'--b',t{2}(1:tpext+1),Ydd2(1:tpext+1,2),'--g')
 title('$q_4$','Interpreter','Latex')
 xlabel('$t$','Interpreter','Latex')
 legend('pos','vel','acc')

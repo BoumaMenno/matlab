@@ -54,7 +54,7 @@ hybsys.g  = {[], g12, g13, g14;
 %*************************************************************************%
 
 % Define the input (for creating the reference)
-Ka = [1^2*eye(3),[0;0;0],2*1*eye(3),[0;0;0]];
+Ka = [0*1^2*eye(3),[0;0;0],0*2*1*eye(3),[0;0;0]];
 ff = {@(t,x,~) interp1(t_ref{1},mu{1},t).', ...
       @(t,x,~) interp1(t_ref{1},mu{1},t).', ...
       @(t,x,~) interp1(t_ref{1},mu{1},t).', ...
@@ -82,27 +82,34 @@ ref_traj = HybridSim(hybsys,ff,t0:dt:T,x0,1);
 %                 @(t,x,~) mu(t,2) - K{2}*(x-alpha(t,2))};   % controller (using pushing sequence) 
 % traj_trc     = HybridSim(hybsys,cntrl_trc,t0:dt:T,x0e,1);
 
-% % Plot results
-% options.linecolor       = {1/256*[200 25 25],1/256*[200 25 25]};
-% options.linestyle       = {':','-'};
-% options.labels          = {'$u$','$x_1$','$x_2$'};
-% options.legend          = {'ref ext','ref'};
-% options.evntlines       = 1;
-% options.cntrbar         = [0;1];
-% options.cntr            = 'num';
-% options.barcolor        = [1/256*[0 102 204];1/256*[0 162 222];1/256*[132 210 0];1/256*[206 223 0]];
-% options.marker          = {'none','none';'.','.';'.','.'};
-% options.markersize      = [7*ones(3,1),7*ones(3,1)];
-% 
-% signals.x = [1,2];
-% signals.u = 1;
-% grd = [3,1];
-% 
-% figure(2)
-% PlotHybTraj({ref_traj_ext,ref_traj},signals,grd,options)
+% Plot results
+options.linecolor       = {1/256*[200 25 25]};
+options.linestyle       = {'-'};
+options.legend          = {'ref'};
+options.evntlines       = 1;
+options.cntrbar         = [1];
+options.cntr            = 'num';
+options.barcolor        = [1/256*[0 102 204];1/256*[0 162 222];1/256*[132 210 0];1/256*[206 223 0]];
+options.marker          = {'none','none';'.','.';'.','.'};
+options.markersize      = [7*ones(3,1),7*ones(3,1)];
+%
 
+options.labels          = {'$q_1$','$q_2$','$q_3$'};
+signals.x = [1,2,3];
+signals.u = [];
+grd = [3,1];
+figure(2)
+PlotHybTraj({ref_traj},signals,grd,options)
+
+options.labels          = {'$\dot{q}_1$','$\dot{q}_2$','$\dot{q}_3$'};
+signals.x = [5,6,7];
+signals.u = [];
+grd = [3,1];
 figure(3)
-AnimSys(ref_traj.t,ref_traj.x,1,'reference_without_release')
+PlotHybTraj({ref_traj},signals,grd,options)
+
+AnimSys(ref_traj.t,ref_traj.x,1)
+
 % AnimSys(traj_trc.t,traj_trc.x,1)
 % figure(3)
 % AnimSysWRef(ref_traj.t,ref_traj.x,traj_trc.t,traj_trc.x,1)
