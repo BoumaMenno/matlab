@@ -62,6 +62,7 @@ end
 if min(lambda) < 0
     lambda
     warning('Invalid constraint force encountered.')
+%     pause
 end
 
 % Time derivative of state

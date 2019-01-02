@@ -18,14 +18,9 @@ x = Y(1);   y = Y(2);   th = Y(3);
 o2x = x - L3*cos(th);
 o2y = y - L3*sin(th);
 D   = (o2x^2 + o2y^2 - L1^2 - L2^2)/(2*L1*L2);
-xtest = [];
+
 if abs(D) > 1
-    if isempty(xtest)
-        xtest = x;
-        ytest = y;
-        thtest = th;
     D = NaN;
-    end
 end
 
 q1 = atan2(o2y,o2x)-atan2(L2*sqrt(1-D^2),L1+L2*D);
