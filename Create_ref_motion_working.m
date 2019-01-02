@@ -11,23 +11,23 @@ y{1}  = [0.65,  0,        0;
          0.45,  Dy-w4/2,  pi/2;
          0.35,  1.35*Dy,  pi/1.5];  % Position and orientation of the end-effector at beginning, impact, and end of (extended) phase 1
                                     % The door/plank is assumed to be at rest during this phase 
-y{2}  = [0.4, pi/5];               % Position of the end-effector along the door and angle q4 at the beginning and end of (extended) phase 2. The begin position for q4 is not used, but is chosen such that the contact forces remain positive.
+y{2}  = [0.4, pi/5];                % Position of the end-effector along the door and angle q4 at the beginning and end of (extended) phase 2. The begin position for q4 is not used, but is chosen such that the contact forces remain positive.
                                     % The post-impact position is determined from phase 1 for consistency
 v{1}  = [0,     0,     0
          -0.15, 0.45,  -1;
-         -0.15, 1.2,  0];          % (Trans. and rot.) velocity of the end-effector at beginning, impact, and end of (extended) phase 1
+         -0.15, 1.2,  0];           % (Trans. and rot.) velocity of the end-effector at beginning, impact, and end of (extended) phase 1
                                     % The door/plank is assumed to be at rest during this phase
-v{2}  = [0,   0];                     % Velocity of the end-effector along the door and dq4/dt at the beginning and end of (extended) phase 2. The begin velocity for q4 is not used, but is chosen such that the contact forces remain positive.
+v{2}  = [0,   0];                   % Velocity of the end-effector along the door and dq4/dt at the beginning and end of (extended) phase 2. The begin velocity for q4 is not used, but is chosen such that the contact forces remain positive.
                                     % The post-impact speed is determined from phase 1 using the impact map (for consistency) 
 
 a{1}  = [0,     0,    0;
          -0.03, 2.5,  -.25;
          0,     0,    0];           % (Trans. and rot.) acceleration of the end-effector at beginning, impact, and end of (extended) phase 1
 % a{1}(2,2) = 3;
-a{2}  = [-2, 0];                      % Acceleration of the end-effector along the door and d2q4/dt2 at the beginning and end of (extended) phase 2. The begin acc for q4 is not used, but is chosen such that the contact forces remain positive.                                    % Continuity of the x component of the 2d acceleration is used to compute the post impact acc. 
+a{2}  = [-2, 0];                    % Acceleration of the end-effector along the door and d2q4/dt2 at the beginning and end of (extended) phase 2. The begin acc for q4 is not used, but is chosen such that the contact forces remain positive.                                    % Continuity of the x component of the 2d acceleration is used to compute the post impact acc. 
 
 qdd4_pi  = 2;                       % Post-impact angular acceleration of the door 
-qddd4_pi = 0;                     % Post-impact angular jerk of the door
+qddd4_pi = 0;                       % Post-impact angular jerk of the door
 
 % Create motion **********************************************************%
 
@@ -140,18 +140,24 @@ clearvars t_ref q_ref qd_ref qdd_ref
 % Plot results
 figure
 plot(t{1},Y(:,1),t{1},Yd(:,1),t{1},Ydd(:,1))
+hold on
+plot([1 1],[-1 1],'--k')
 title('$x$','Interpreter','Latex')
 xlabel('$t$','Interpreter','Latex')
 legend('pos','vel','acc')
 
 figure
 plot(t{1},Y(:,2),t{1},Yd(:,2),t{1},Ydd(:,2))
+hold on
+plot([1 1],[-6 10],'--k')
 title('$y$','Interpreter','Latex')
 xlabel('$t$','Interpreter','Latex')
 legend('pos','vel','acc')
 
 figure
 plot(t{1},Y(:,3),t{1},Yd(:,3),t{1},Ydd(:,3))
+hold on
+plot([1 1],[-20 20],'--k')
 title('$\theta$','Interpreter','Latex')
 xlabel('$t$','Interpreter','Latex')
 legend('pos','vel','acc')

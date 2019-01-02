@@ -83,25 +83,24 @@ ref_traj = HybridSim(hybsys,ff,t0:dt:T,x0,1);
 % traj_trc     = HybridSim(hybsys,cntrl_trc,t0:dt:T,x0e,1);
 
 % % Plot results
-% options.linecolor       = {1/256*[200 25 25],1/256*[200 25 25]};
-% options.linestyle       = {':','-'};
-% options.labels          = {'$u$','$x_1$','$x_2$'};
-% options.legend          = {'ref ext','ref'};
-% options.evntlines       = 1;
-% options.cntrbar         = [0;1];
-% options.cntr            = 'num';
-% options.barcolor        = [1/256*[0 102 204];1/256*[0 162 222];1/256*[132 210 0];1/256*[206 223 0]];
-% options.marker          = {'none','none';'.','.';'.','.'};
-% options.markersize      = [7*ones(3,1),7*ones(3,1)];
-% 
-% signals.x = [1,2];
-% signals.u = 1;
-% grd = [3,1];
-% 
-% figure(2)
-% PlotHybTraj({ref_traj_ext,ref_traj},signals,grd,options)
+options.linecolor       = {1/256*[200 25 25],1/256*[200 25 25]};
+options.linestyle       = {'-'};
+options.labels          = {'$u$','$x_1$','$x_2$'};
+options.legend          = {'ref'};
+options.evntlines       = 1;
+options.cntrbar         = [0;1];
+options.cntr            = 'num';
+options.barcolor        = [1/256*[0 102 204];1/256*[0 162 222];1/256*[132 210 0];1/256*[206 223 0]];
+options.marker          = {'none','none';'.','.';'.','.'};
+options.markersize      = [7*ones(3,1),7*ones(3,1)];
 
-figure(3)
+signals.x = [1,2];
+signals.u = 1;
+grd = [3,1];
+
+figure(2)
+PlotHybTraj(ref_traj,signals,grd,options)
+
 AnimSys(ref_traj.t,ref_traj.x,1,'reference_without_release')
 % AnimSys(traj_trc.t,traj_trc.x,1)
 % figure(3)
