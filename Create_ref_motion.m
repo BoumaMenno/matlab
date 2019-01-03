@@ -1,35 +1,36 @@
-clear; close all; clc;
+clear; close all; 
+% clc;
 
 % Load parameters
 param
 
 % Set motion parameters
-t_vec = [0,2,4];                    % Start time, impact time, end time
-dt    = 0.001;                      % Time step
-Dt    = 0.5;                        % Extension time
+t_vec = [0,1,2];                      % Start time, impact time, end time
+dt    = 0.001;                        % Time step
+Dt    = 0.5;                          % Extension time
 
-y{1}  = [ 0.65,     0,        0 
-          L4/2-Dx,  Dy-w4/2,  pi/2
-          0.2,      1.5*Dy,   pi/1.8 ];    % Position and orientation of the end-effector at beginning, impact, and end of (extended) phase 1
-                                    % The door/plank is assumed to be at rest during this phase 
+y{1}  = [ 0.65,            0,               pi/5 
+          L4-L4/3-Dx,      Dy-w4/2,         pi/2
+          L4-L4/3-Dx-0.2,  Dy-w4/2+0.2,    pi/2 ]; % Position and orientation of the end-effector at beginning, impact, and end of (extended) phase 1
+                                                    % The door/plank is assumed to be at rest during this phase 
 y{2}  = [ 0.55,  0   
-          L4/4,  pi/6];               % Position of the end-effector along the door and angle q4 at the beginning and end of (extended) phase 2. The begin position for q4 is not used, but is chosen such that the contact forces remain positive.
-                                    % The post-impact position is determined from phase 1 for consistency
-v{1}  = [ 0,    0,      0;
-         -0.1,  0.35,   .2;
-         -0.3,  0.45,   .4 ];           % (Trans. and rot.) velocity of the end-effector at beginning, impact, and end of (extended) phase 1
-                                    % The door/plank is assumed to be at rest during this phase
-v{2}  = [-0.4, 0; 0, 0.2 ];          % Velocity of the end-effector along the door and dq4/dt at the beginning and end of (extended) phase 2. The begin velocity for q4 is not used, but is chosen such that the contact forces remain positive.
-                                    % The post-impact speed is determined from phase 1 using the impact map (for consistency) 
+          L4/3,  pi/6];               % Position of the end-effector along the door and angle q4 at the beginning and end of (extended) phase 2. The begin position for q4 is not used, but is chosen such that the contact forces remain positive.
+                                      % The post-impact position is determined from phase 1 for consistency
+v{1}  = [ 0,        0,        0
+          -.25,     0.35,     0
+          -.25-.3,  0.35+.15, 0 ];           % (Trans. and rot.) velocity of the end-effector at beginning, impact, and end of (extended) phase 1
+                                      % The door/plank is assumed to be at rest during this phase
+v{2}  = [-0.6, 0; 0, 0.4 ];           % Velocity of the end-effector along the door and dq4/dt at the beginning and end of (extended) phase 2. The begin velocity for q4 is not used, but is chosen such that the contact forces remain positive.
+                                      % The post-impact speed is determined from phase 1 using the impact map (for consistency) 
 
-a{1}  = [ 0,    0,     0
-          0,    2,    .15
-          0,    3,    .12 ];                 % (Trans. and rot.) acceleration of the end-effector at beginning, impact, and end of (extended) phase 1
+a{1}  = [ 0,      0,    0
+          -.7,    2,    0
+          -.7,    1,    0 ];            % (Trans. and rot.) acceleration of the end-effector at beginning, impact, and end of (extended) phase 1
 
-a{2}  = [ 0,0;-3,4 ];                % Acceleration of the end-effector along the door and d2q4/dt2 at the beginning and end of (extended) phase 2. The begin acc for q4 is not used, but is chosen such that the contact forces remain positive.
-                                    % Continuity of the x component of the 2d acceleration is used to compute the post impact acc. 
-qdd4_pi  = 0;                       % Post-impact angular acceleration of the door 
-qddd4_pi = 0.6;                     % Post-impact angular jerk of the door
+a{2}  = [ 0,0;-3,4 ];                 % Acceleration of the end-effector along the door and d2q4/dt2 at the beginning and end of (extended) phase 2. The begin acc for q4 is not used, but is chosen such that the contact forces remain positive.
+                                      % Continuity of the x component of the 2d acceleration is used to compute the post impact acc. 
+qdd4_pi  = 0;                         % Post-impact angular acceleration of the door 
+qddd4_pi = 0.6;                       % Post-impact angular jerk of the door
 % Create motion **********************************************************%
 
 % Polynomial shape functions (in order y0,v0,a0,yf,vf,af)
@@ -121,10 +122,16 @@ for i = 1:length(t{1})
     mu{1}(i,:)      = mu_i.';
     lambda{1}(i,:)  = lambda_i.';
 end
+
 for i = 1:length(t{2})
     [mu_i,lambda_i] = InvDyn(q{2}(i,:).',qd{2}(i,:).',qdd{2}(i,:).',1,1);
     mu{2}(i,:)      = mu_i.';
     lambda{2}(i,:)  = lambda_i.';
+    if min(lambda{2}(i,:)) < 0
+        i
+        lambda{2}(i,:)
+        break
+    end
 end
 
 % Check if flow would be possible if one point impacts

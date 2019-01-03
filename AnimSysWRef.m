@@ -233,7 +233,7 @@ for ii = 1:length(t)
     ylabel('y')
     
     set(gca,'Nextplot','Replacechildren')
-    set(gcf,'Position',[490 77 888 846])
+    set(gcf,'Position',[1300 550 592 564])
     hatch(wall1,[45,5,lw],'k')
     hatch(wall2,[45,5,lw],'k')
     
