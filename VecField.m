@@ -60,9 +60,10 @@ end
 
 % Check contraint forces
 if min(lambda) < 0
-    lambda
     warning('Invalid constraint force encountered.')
-%     pause
+    lambda
+    act01
+    act10
 end
 
 % Time derivative of state

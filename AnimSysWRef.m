@@ -14,7 +14,7 @@ function AnimSysWRef(time_ref,q_ref,time,q,showpath,filename)
 %    TU/e, 5-7-2018
 %--------------------------------------------------------------------------
 
-global L1 L2 L3 L4 w3 w4 Dx Dy
+global L1 L2 L3 L4 w3 w4 Dx Dy c3x d3 
 
 % Check if a video is requested or not
 if nargin == 6
@@ -111,9 +111,10 @@ th = 0:pi/100:pi;
 door  = [0 L4 L4 0 0;  w4/2 w4/2 -w4/2 -w4/2 w4/2; 1 1 1 1 1];
 link1 = [0 -L1-r*sin(th) r*sin(th); r r*cos(th) -r*cos(th); ones(1,1+2*length(th))]; 
 link2 = [0 -L2-r*sin(th) r*sin(th); r r*cos(th) -r*cos(th); ones(1,1+2*length(th))];
-link3 = [L3*[-1 -0.5 -0.3 0 0 -0.2 -0.2 0 0 -0.3 -0.5 -1 -1];
-         w3/2*[0.2 0.2 1 1 0.75 0.75 -0.75 -0.75 -1 -1 -0.2 -0.2 0.2];
-         ones(1,13)];
+link3 = [ [0, 0, -c3x, -L3, -L3]
+          [d3, d3-w3, d3-w3, 0, d3]
+           ones(1,5) ];
+
 circ  = [0.5*r*cos(2*th);0.5*r*sin(2*th)];
 hinge = 1.2*[-w4 w4/2*sin(th) -w4 -w4; w4/2 w4/2*cos(th) -w4/2 w4/2];
 base  = 1.2*[r r*cos(th) -r r;-2*r r*sin(th) -2*r -2*r];
@@ -130,7 +131,8 @@ col     = [1,1,1];
 col_ref = [0.9,0.9,0.9];
 
 % Animate
-close all;  figure
+% close all;  
+figure
 for ii = 1:length(t)
     clf('reset')
     set(gcf,'Color','w')

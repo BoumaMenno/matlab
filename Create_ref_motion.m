@@ -7,22 +7,21 @@ param
 % Set motion parameters
 t_vec = [0,1,2];                      % Start time, impact time, end time
 dt    = 0.001;                        % Time step
-Dt    = 0.5;                          % Extension time
+Dt    = 0.2;                          % Extension time
 
 y{1}  = [ 0.65,            0,               pi/5 
           L4-L4/3-Dx,      Dy-w4/2,         pi/2
-          L4-L4/3-Dx-0.2,  Dy-w4/2+0.2,    pi/2 ]; % Position and orientation of the end-effector at beginning, impact, and end of (extended) phase 1
+          L4-L4/3-Dx-0.08,  Dy-w4/2+0.12,    pi/2 ]; % Position and orientation of the end-effector at beginning, impact, and end of (extended) phase 1
                                                     % The door/plank is assumed to be at rest during this phase 
 y{2}  = [ 0.55,  0   
           L4/3,  pi/6];               % Position of the end-effector along the door and angle q4 at the beginning and end of (extended) phase 2. The begin position for q4 is not used, but is chosen such that the contact forces remain positive.
                                       % The post-impact position is determined from phase 1 for consistency
 v{1}  = [ 0,        0,        0
           -.25,     0.35,     0
-          -.25-.3,  0.35+.15, 0 ];           % (Trans. and rot.) velocity of the end-effector at beginning, impact, and end of (extended) phase 1
+          -.25-.3,  0.35+.35, 0 ];           % (Trans. and rot.) velocity of the end-effector at beginning, impact, and end of (extended) phase 1
                                       % The door/plank is assumed to be at rest during this phase
 v{2}  = [-0.6, 0; 0, 0.4 ];           % Velocity of the end-effector along the door and dq4/dt at the beginning and end of (extended) phase 2. The begin velocity for q4 is not used, but is chosen such that the contact forces remain positive.
                                       % The post-impact speed is determined from phase 1 using the impact map (for consistency) 
-
 a{1}  = [ 0,      0,    0
           -.7,    2,    0
           -.7,    1,    0 ];            % (Trans. and rot.) acceleration of the end-effector at beginning, impact, and end of (extended) phase 1
@@ -151,27 +150,27 @@ tpext = (1/dt)*Dt;
 
 % Plot first part of motion
 figure
-plot(t{1}(1:t1p),Y(1:t1p,1),'-r',t{1}(1:t1p),Yd(1:t1p,1),'-b')%,t{1}(1:t1p),Ydd(1:t1p,1),'-g')
+plot(t{1}(1:t1p),Y(1:t1p,1),'-r',t{1}(1:t1p),Yd(1:t1p,1),'-b',t{1}(1:t1p),Ydd(1:t1p,1),'-g')
 hold on
-plot(t{1}(t1p:t1p+tpext),Y(t1p:t1p+tpext,1),'--r',t{1}(t1p:t1p+tpext),Yd(t1p:t1p+tpext,1),'--b')%,t{1}(t1p:t1p+tpext),Ydd(t1p:t1p+tpext,1),'--g')
+plot(t{1}(t1p:t1p+tpext),Y(t1p:t1p+tpext,1),'--r',t{1}(t1p:t1p+tpext),Yd(t1p:t1p+tpext,1),'--b',t{1}(t1p:t1p+tpext),Ydd(t1p:t1p+tpext,1),'--g')
 title('$x$','Interpreter','Latex')
 xlabel('$t$','Interpreter','Latex')
 legend('pos','vel')
 movegui('northwest')
 
 figure
-plot(t{1}(1:t1p),Y(1:t1p,2),'-r',t{1}(1:t1p),Yd(1:t1p,2),'-b')%,t{1}(1:t1p),Ydd(1:t1p,2),'-g')
+plot(t{1}(1:t1p),Y(1:t1p,2),'-r',t{1}(1:t1p),Yd(1:t1p,2),'-b',t{1}(1:t1p),Ydd(1:t1p,2),'-g')
 hold on
-plot(t{1}(t1p:t1p+tpext),Y(t1p:t1p+tpext,2),'--r',t{1}(t1p:t1p+tpext),Yd(t1p:t1p+tpext,2),'--b')%,t{1}(t1p:t1p+tpext),Ydd(t1p:t1p+tpext,2),'--g')
+plot(t{1}(t1p:t1p+tpext),Y(t1p:t1p+tpext,2),'--r',t{1}(t1p:t1p+tpext),Yd(t1p:t1p+tpext,2),'--b',t{1}(t1p:t1p+tpext),Ydd(t1p:t1p+tpext,2),'--g')
 title('$y$','Interpreter','Latex')
 xlabel('$t$','Interpreter','Latex')
 legend('pos','vel')
 movegui('north')
 
 figure
-plot(t{1}(1:t1p),Y(1:t1p,3),'-r',t{1}(1:t1p),Yd(1:t1p,3),'-b')%,t{1}(1:t1p),Ydd(1:t1p,3),'-g')
+plot(t{1}(1:t1p),Y(1:t1p,3),'-r',t{1}(1:t1p),Yd(1:t1p,3),'-b',t{1}(1:t1p),Ydd(1:t1p,3),'-g')
 hold on
-plot(t{1}(t1p:t1p+tpext),Y(t1p:t1p+tpext,3),'--r',t{1}(t1p:t1p+tpext),Yd(t1p:t1p+tpext,3),'--b')%,t{1}(t1p:t1p+tpext),Ydd(t1p:t1p+tpext,3),'--g')
+plot(t{1}(t1p:t1p+tpext),Y(t1p:t1p+tpext,3),'--r',t{1}(t1p:t1p+tpext),Yd(t1p:t1p+tpext,3),'--b',t{1}(t1p:t1p+tpext),Ydd(t1p:t1p+tpext,3),'--g')
 title('$\theta$','Interpreter','Latex')
 xlabel('$t$','Interpreter','Latex')
 legend('pos','vel')
