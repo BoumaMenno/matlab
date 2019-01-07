@@ -231,13 +231,19 @@ for ii = 1:length(t)
     % Set axis and figure properties
     axis('equal');
     axis([-0.1-Dx, L4-Dx+0.1, -0.2, 0.8])
-    xlabel('x')
-    ylabel('y')
-    
+    xlabel('$x$','Interpreter','Latex')
+    ylabel('$y$','Interpreter','Latex')
+       
     set(gca,'Nextplot','Replacechildren')
     set(gcf,'Position',[1300 550 592 564])
     hatch(wall1,[45,5,lw],'k')
     hatch(wall2,[45,5,lw],'k')
+    
+    % Make snapshots
+    if mod(ii,2) == 0
+        framename = sprintf('frame%i.eps', ii/2);
+        saveas(gcf,fullfile('.\snaps', framename),'epsc')
+    end
     
     % Capture frame
     if rec == 1

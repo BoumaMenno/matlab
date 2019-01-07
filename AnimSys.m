@@ -160,6 +160,12 @@ for ii = 1:length(t)
     hatch(wall1,[45,5,lw],'k')
     hatch(wall2,[45,5,lw],'k')
     
+    % Make snapshots
+    if mod(ii,2) == 0
+        framename = sprintf('frame%i.eps', ii/2);
+        saveas(gcf,fullfile('.\snaps', framename),'epsc')
+    end
+    
     % Capture frame
     if rec == 1
         writeVideo(writerObj,getframe(gcf));

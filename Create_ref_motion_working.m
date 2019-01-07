@@ -9,18 +9,18 @@ t_vec = [0,1,2];                      % Start time, impact time, end time
 dt    = 0.001;                        % Time step
 Dt    = 0.2;                          % Extension time
 
-y{1}  = [ 0.65,            0,               pi/5 
-          L4-L4/3-Dx,      Dy-w4/2,         pi/2
+y{1}  = [ 0.65,             0,               pi/5 
+          L4-L4/3-Dx,       Dy-w4/2,         pi/2
           L4-L4/3-Dx-0.08,  Dy-w4/2+0.12,    pi/2 ]; % Position and orientation of the end-effector at beginning, impact, and end of (extended) phase 1
                                                     % The door/plank is assumed to be at rest during this phase 
-y{2}  = [ 0.558,  -0.038   
+y{2}  = [ 0.568,  -0.038   
           L4/3,  pi/6];               % Position of the end-effector along the door and angle q4 at the beginning and end of (extended) phase 2. The begin position for q4 is not used, but is chosen such that the contact forces remain positive.
                                       % The post-impact position is determined from phase 1 for consistency
 v{1}  = [ 0,        0,        0
           -.25,     0.35,     0
           -.25-.33,  0.35+.48, 0 ];           % (Trans. and rot.) velocity of the end-effector at beginning, impact, and end of (extended) phase 1
                                       % The door/plank is assumed to be at rest during this phase
-v{2}  = [ -0.1,  0.2 
+v{2}  = [ -0.2,  0.2 
           0,  0.4 ];           % Velocity of the end-effector along the door and dq4/dt at the beginning and end of (extended) phase 2. The begin velocity for q4 is not used, but is chosen such that the contact forces remain positive.
                                       % The post-impact speed is determined from phase 1 using the impact map (for consistency) 
 a{1}  = [ 0,      0,    0
@@ -146,77 +146,104 @@ t_ref   = t;    q_ref   = q;    qd_ref  = qd;   qdd_ref = qdd;
 save ref_motion.mat t_ref q_ref qd_ref qdd_ref mu lambda
 clearvars t_ref q_ref qd_ref qdd_ref
 
+%%
 t1p = (1/dt)*(t_vec(2)-t_vec(1))+1;
 t2p = (1/dt)*(t_vec(3)-t_vec(2))+1;
 tpext = (1/dt)*Dt;
+tue = tue_color;
 
-% % Plot first part of motion
-% figure
-% plot(t{1}(1:t1p),Y(1:t1p,1),'-r',t{1}(1:t1p),Yd(1:t1p,1),'-b',t{1}(1:t1p),Ydd(1:t1p,1),'-g')
-% hold on
-% plot(t{1}(t1p:t1p+tpext),Y(t1p:t1p+tpext,1),'--r',t{1}(t1p:t1p+tpext),Yd(t1p:t1p+tpext,1),'--b',t{1}(t1p:t1p+tpext),Ydd(t1p:t1p+tpext,1),'--g')
-% title('$x$','Interpreter','Latex')
-% xlabel('$t$','Interpreter','Latex')
-% legend('pos','vel')
-% movegui('northwest')
-% 
-% figure
-% plot(t{1}(1:t1p),Y(1:t1p,2),'-r',t{1}(1:t1p),Yd(1:t1p,2),'-b',t{1}(1:t1p),Ydd(1:t1p,2),'-g')
-% hold on
-% plot(t{1}(t1p:t1p+tpext),Y(t1p:t1p+tpext,2),'--r',t{1}(t1p:t1p+tpext),Yd(t1p:t1p+tpext,2),'--b',t{1}(t1p:t1p+tpext),Ydd(t1p:t1p+tpext,2),'--g')
-% title('$y$','Interpreter','Latex')
-% xlabel('$t$','Interpreter','Latex')
-% legend('pos','vel')
-% movegui('north')
-% 
-% figure
-% plot(t{1}(1:t1p),Y(1:t1p,3),'-r',t{1}(1:t1p),Yd(1:t1p,3),'-b',t{1}(1:t1p),Ydd(1:t1p,3),'-g')
-% hold on
-% plot(t{1}(t1p:t1p+tpext),Y(t1p:t1p+tpext,3),'--r',t{1}(t1p:t1p+tpext),Yd(t1p:t1p+tpext,3),'--b',t{1}(t1p:t1p+tpext),Ydd(t1p:t1p+tpext,3),'--g')
-% title('$\theta$','Interpreter','Latex')
-% xlabel('$t$','Interpreter','Latex')
-% legend('pos','vel')
-% movegui('northeast')
+% Plot first part of motion
+figure
+plot(t{1}(1:t1p),Y(1:t1p,1),'Color',tue.r,'LineWidth',2)
+hold on
+plot(t{1}(1:t1p),Yd(1:t1p,1),'Color',tue.db,'LineWidth',2)
+plot(t{1}(1:t1p),Ydd(1:t1p,1),'Color',tue.c,'LineWidth',2)
+plot(t{1}(t1p:t1p+tpext),Y(t1p:t1p+tpext,1),'Color',tue.r,'LineStyle','--','LineWidth',2)
+plot(t{1}(t1p:t1p+tpext),Yd(t1p:t1p+tpext,1),'Color',tue.db,'LineStyle','--','LineWidth',2)
+plot(t{1}(t1p:t1p+tpext),Ydd(t1p:t1p+tpext,1),'Color',tue.c,'LineStyle','--','LineWidth',2)
+xlabel('$t$','Interpreter','Latex')
+set(gca,'FontSize',12)
+grid minor
+legend('$x$ [m]','$\dot{x}$ [m/s]','$\ddot{x}$ [m/s$^2$]','Interpreter','Latex','Location','northwest','FontSize',13)
+movegui('northwest')
+
+figure
+plot(t{1}(1:t1p),Y(1:t1p,2),'Color',tue.r,'LineWidth',2)
+hold on
+plot(t{1}(1:t1p),Yd(1:t1p,2),'Color',tue.db,'LineWidth',2)
+plot(t{1}(1:t1p),Ydd(1:t1p,2),'Color',tue.c,'LineWidth',2)
+plot(t{1}(t1p:t1p+tpext),Y(t1p:t1p+tpext,2),'Color',tue.r,'LineStyle','--','LineWidth',2)
+plot(t{1}(t1p:t1p+tpext),Yd(t1p:t1p+tpext,2),'Color',tue.db,'LineStyle','--','LineWidth',2)
+plot(t{1}(t1p:t1p+tpext),Ydd(t1p:t1p+tpext,2),'Color',tue.c,'LineStyle','--','LineWidth',2)
+xlabel('$t$','Interpreter','Latex')
+set(gca,'FontSize',12)
+legend('$y$ [m]','$\dot{y}$ [m/s]','$\ddot{y}$ [m/s$^2$]','Interpreter','Latex','Location','northwest','FontSize',13)
+grid minor
+movegui('north')
+
+figure
+plot(t{1}(1:t1p),Y(1:t1p,3),'Color',tue.r,'LineWidth',2)
+hold on
+plot(t{1}(1:t1p),Yd(1:t1p,3),'Color',tue.db,'LineWidth',2)
+plot(t{1}(1:t1p),Ydd(1:t1p,3),'Color',tue.c,'LineWidth',2)
+plot(t{1}(t1p:t1p+tpext),Y(t1p:t1p+tpext,3),'Color',tue.r,'LineStyle','--','LineWidth',2)
+plot(t{1}(t1p:t1p+tpext),Yd(t1p:t1p+tpext,3),'Color',tue.db,'LineStyle','--','LineWidth',2)
+plot(t{1}(t1p:t1p+tpext),Ydd(t1p:t1p+tpext,3),'Color',tue.c,'LineStyle','--','LineWidth',2)
+xlabel('$t$','Interpreter','Latex')
+set(gca,'FontSize',12)
+legend('$\theta$ [rad]','$\dot{\theta}$ [rad/s]','$\ddot{\theta}$ [rad/s$^2$]','Interpreter','Latex','Location','northeast','FontSize',13)
+grid minor
+movegui('northeast')
 
 % Plot second part of motion
 figure
-plot(t{2}(tpext+1:tpext+t2p),Y2(tpext+1:tpext+t2p,1),'-r',t{2}(tpext+1:tpext+t2p),Yd2(tpext+1:tpext+t2p,1),'-b')%,t{2}(tpext+1:t2p),Ydd2(tpext+1:t2p,1),'-g')
+plot(t{2}(tpext+1:tpext+t2p),Y2(tpext+1:tpext+t2p,1),'Color',tue.r,'LineWidth',2)
 hold on
-plot(t{2}(1:tpext+1),Y2(1:tpext+1,1),'--r',t{2}(1:tpext+1),Yd2(1:tpext+1,1),'--b')%,t{2}(1:tpext+1),Ydd2(1:tpext+1,1),'--g')
-title('$o_{3,x}^{4}$','Interpreter','Latex')
+plot(t{2}(tpext+1:tpext+t2p),Yd2(tpext+1:tpext+t2p,1),'Color',tue.db,'LineWidth',2)
+plot(t{2}(tpext+1:tpext+t2p),Ydd2(tpext+1:tpext+t2p,1),'Color',tue.c,'LineWidth',2)
+plot(t{2}(1:tpext+1),Y2(1:tpext+1,1),'Color',tue.r,'LineStyle','--','LineWidth',2)
+plot(t{2}(1:tpext+1),Yd2(1:tpext+1,1),'Color',tue.db,'LineStyle','--','LineWidth',2)
+plot(t{2}(1:tpext+1),Ydd2(1:tpext+1,1),'Color',tue.c,'LineStyle','--','LineWidth',2)
 xlabel('$t$','Interpreter','Latex')
-legend('pos','vel')
+set(gca,'FontSize',12)
+legend('$o_{3,x}^{4}$ [m]','$\dot{o}_{3,x}^{4}$ [m/s]','$\ddot{o}_{3,x}^{4}$ [m/s$^2$]','Interpreter','Latex','Location','northwest','FontSize',13)
+grid minor
 movegui('southwest')
 
 figure
-plot(t{2}(tpext+1:tpext+t2p),Y2(tpext+1:tpext+t2p,2),'-r',t{2}(tpext+1:tpext+t2p),Yd2(tpext+1:tpext+t2p,2),'-b')%,t{2}(tpext+1:t2p),Ydd2(tpext+1:t2p,2),'-g')
+plot(t{2}(tpext+1:tpext+t2p),Y2(tpext+1:tpext+t2p,2),'Color',tue.r,'LineWidth',2)
 hold on
-plot(t{2}(1:tpext+1),Y2(1:tpext+1,2),'--r',t{2}(1:tpext+1),Yd2(1:tpext+1,2),'--b')%,t{2}(1:tpext+1),Ydd2(1:tpext+1,2),'--g')
-title('$q_4$','Interpreter','Latex')
+plot(t{2}(tpext+1:tpext+t2p),Yd2(tpext+1:tpext+t2p,2),'Color',tue.db,'LineWidth',2)
+plot(t{2}(tpext+1:tpext+t2p),Ydd2(tpext+1:tpext+t2p,2),'Color',tue.c,'LineWidth',2)
+plot(t{2}(1:tpext+1),Y2(1:tpext+1,2),'Color',tue.r,'LineStyle','--','LineWidth',2)
+plot(t{2}(1:tpext+1),Yd2(1:tpext+1,2),'Color',tue.db,'LineStyle','--','LineWidth',2)
+plot(t{2}(1:tpext+1),Ydd2(1:tpext+1,2),'Color',tue.c,'LineStyle','--','LineWidth',2)
 xlabel('$t$','Interpreter','Latex')
-legend('pos','vel')
+set(gca,'FontSize',12)
+legend('$q_4$ [rad]','$\dot{q}_4$ [rad/s]','$\ddot{q}_4$ [rad/s$^2$]','Interpreter','Latex','Location','northwest','FontSize',13)
+grid minor
 movegui('south')
 
-% figure
-% ax(1) = subplot(3,1,1);
-% plot(t{1},mu{1}(:,1))
-% % hold on
-% % plot(t{2},mu{2}(:,1))
-% ylabel('$\mu_1$ [Nm]','Interpreter','Latex')
-% 
-% ax(2) = subplot(3,1,2);
-% plot(t{1},mu{1}(:,2))
-% % hold on
-% % plot(t{2},mu{2}(:,2))
-% ylabel('$\mu_2$ [Nm]','Interpreter','Latex')
-% 
-% ax(3) = subplot(3,1,3);
-% plot(t{1},mu{1}(:,3))
-% % hold on
-% % plot(t{2},mu{2}(:,3))
-% ylabel('$\mu_3$ [Nm]','Interpreter','Latex')
-% xlabel('$t$ [s]','Interpreter','Latex')
-% linkaxes(ax,'x')
+figure
+ax(1) = subplot(3,1,1);
+plot(t{1},mu{1}(:,1))
+hold on
+plot(t{2},mu{2}(:,1))
+ylabel('$\mu_1$ [Nm]','Interpreter','Latex')
+
+ax(2) = subplot(3,1,2);
+plot(t{1},mu{1}(:,2))
+hold on
+plot(t{2},mu{2}(:,2))
+ylabel('$\mu_2$ [Nm]','Interpreter','Latex')
+
+ax(3) = subplot(3,1,3);
+plot(t{1},mu{1}(:,3))
+hold on
+plot(t{2},mu{2}(:,3))
+ylabel('$\mu_3$ [Nm]','Interpreter','Latex')
+xlabel('$t$ [s]','Interpreter','Latex')
+linkaxes(ax,'x')
 % 
 % figure
 % ax2(1) = subplot(2,1,1);

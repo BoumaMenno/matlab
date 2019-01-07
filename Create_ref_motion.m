@@ -147,52 +147,78 @@ clearvars t_ref q_ref qd_ref qdd_ref
 t1p = (1/dt)*(t_vec(2)-t_vec(1))+1;
 t2p = (1/dt)*(t_vec(3)-t_vec(2))+1;
 tpext = (1/dt)*Dt;
+tue = tue_color;
 
 % Plot first part of motion
 figure
-plot(t{1}(1:t1p),Y(1:t1p,1),'-r',t{1}(1:t1p),Yd(1:t1p,1),'-b',t{1}(1:t1p),Ydd(1:t1p,1),'-g')
+plot(t{1}(1:t1p),Y(1:t1p,1),'Color',tue.r)
 hold on
-plot(t{1}(t1p:t1p+tpext),Y(t1p:t1p+tpext,1),'--r',t{1}(t1p:t1p+tpext),Yd(t1p:t1p+tpext,1),'--b',t{1}(t1p:t1p+tpext),Ydd(t1p:t1p+tpext,1),'--g')
+plot(t{1}(1:t1p),Yd(1:t1p,1),'Color',tue.db)
+plot(t{1}(1:t1p),Ydd(1:t1p,1),'Color',tue.c)
+plot(t{1}(t1p:t1p+tpext),Y(t1p:t1p+tpext,1),'Color',tue.r,'LineStyle','--')
+plot(t{1}(t1p:t1p+tpext),Yd(t1p:t1p+tpext,1),'Color',tue.db,'LineStyle','--')
+plot(t{1}(t1p:t1p+tpext),Ydd(t1p:t1p+tpext,1),'Color',tue.c,'LineStyle','--')
 title('$x$','Interpreter','Latex')
 xlabel('$t$','Interpreter','Latex')
-legend('pos','vel')
+legend('$x [m]$','$\dot{x} [m/s]$','$\ddot{x} [m/s^2]$','Interpreter','Latex')
+set(gca,'FontSize',12)
 movegui('northwest')
 
 figure
-plot(t{1}(1:t1p),Y(1:t1p,2),'-r',t{1}(1:t1p),Yd(1:t1p,2),'-b',t{1}(1:t1p),Ydd(1:t1p,2),'-g')
+plot(t{1}(1:t1p),Y(1:t1p,2),'Color',tue.r)
 hold on
-plot(t{1}(t1p:t1p+tpext),Y(t1p:t1p+tpext,2),'--r',t{1}(t1p:t1p+tpext),Yd(t1p:t1p+tpext,2),'--b',t{1}(t1p:t1p+tpext),Ydd(t1p:t1p+tpext,2),'--g')
+plot(t{1}(1:t1p),Yd(1:t1p,2),'Color',tue.db)
+plot(t{1}(1:t1p),Ydd(1:t1p,2),'Color',tue.c)
+plot(t{1}(t1p:t1p+tpext),Y(t1p:t1p+tpext,2),'Color',tue.r,'LineStyle','--')
+plot(t{1}(t1p:t1p+tpext),Yd(t1p:t1p+tpext,2),'Color',tue.db,'LineStyle','--')
+plot(t{1}(t1p:t1p+tpext),Ydd(t1p:t1p+tpext,2),'Color',tue.c,'LineStyle','--')
 title('$y$','Interpreter','Latex')
 xlabel('$t$','Interpreter','Latex')
-legend('pos','vel')
+legend('$y [m]$','$\dot{y} [m/s]$','$\ddot{y} [m/s^2]$','Interpreter','Latex')
+set(gca,'FontSize',12)
 movegui('north')
 
 figure
-plot(t{1}(1:t1p),Y(1:t1p,3),'-r',t{1}(1:t1p),Yd(1:t1p,3),'-b',t{1}(1:t1p),Ydd(1:t1p,3),'-g')
+plot(t{1}(1:t1p),Y(1:t1p,3),'Color',tue.r)
 hold on
-plot(t{1}(t1p:t1p+tpext),Y(t1p:t1p+tpext,3),'--r',t{1}(t1p:t1p+tpext),Yd(t1p:t1p+tpext,3),'--b',t{1}(t1p:t1p+tpext),Ydd(t1p:t1p+tpext,3),'--g')
+plot(t{1}(1:t1p),Yd(1:t1p,3),'Color',tue.db)
+plot(t{1}(1:t1p),Ydd(1:t1p,3),'Color',tue.c)
+plot(t{1}(t1p:t1p+tpext),Y(t1p:t1p+tpext,3),'Color',tue.r,'LineStyle','--')
+plot(t{1}(t1p:t1p+tpext),Yd(t1p:t1p+tpext,3),'Color',tue.db,'LineStyle','--')
+plot(t{1}(t1p:t1p+tpext),Ydd(t1p:t1p+tpext,3),'Color',tue.c,'LineStyle','--')
 title('$\theta$','Interpreter','Latex')
 xlabel('$t$','Interpreter','Latex')
-legend('pos','vel')
+legend('$\theta [rad]$','$\dot{\theta} [rad/s]$','$\ddot{\theta} [rad/s^2]$','Interpreter','Latex')
+set(gca,'FontSize',12)
 movegui('northeast')
 
 % Plot second part of motion
 figure
-plot(t{2}(tpext+1:tpext+t2p),Y2(tpext+1:tpext+t2p,1),'-r',t{2}(tpext+1:tpext+t2p),Yd2(tpext+1:tpext+t2p,1),'-b')%,t{2}(tpext+1:t2p),Ydd2(tpext+1:t2p,1),'-g')
+plot(t{2}(tpext+1:tpext+t2p),Y2(tpext+1:tpext+t2p,1),'Color',tue.r)
 hold on
-plot(t{2}(1:tpext+1),Y2(1:tpext+1,1),'--r',t{2}(1:tpext+1),Yd2(1:tpext+1,1),'--b')%,t{2}(1:tpext+1),Ydd2(1:tpext+1,1),'--g')
+plot(t{2}(tpext+1:tpext+t2p),Yd2(tpext+1:tpext+t2p,1),'Color',tue.db)
+plot(t{2}(tpext+1:tpext+t2p),Ydd2(tpext+1:tpext+t2p,1),'Color',tue.c)
+plot(t{2}(1:tpext+1),Y2(1:tpext+1,1),'Color',tue.r,'LineStyle','--')
+plot(t{2}(1:tpext+1),Yd2(1:tpext+1,1),'Color',tue.db,'LineStyle','--')
+plot(t{2}(1:tpext+1),Ydd2(1:tpext+1,1),'Color',tue.c,'LineStyle','--')
 title('$o_{3,x}^{4}$','Interpreter','Latex')
 xlabel('$t$','Interpreter','Latex')
-legend('pos','vel')
+legend('$o_{3,x}^{4} [m]$','$\dot{o}_{3,x}^{4} [m/s]$','$\ddot{o}_{3,x}^{4} [m/s^2]$','Interpreter','Latex')
+set(gca,'FontSize',12)
 movegui('southwest')
 
 figure
-plot(t{2}(tpext+1:tpext+t2p),Y2(tpext+1:tpext+t2p,2),'-r',t{2}(tpext+1:tpext+t2p),Yd2(tpext+1:tpext+t2p,2),'-b')%,t{2}(tpext+1:t2p),Ydd2(tpext+1:t2p,2),'-g')
+plot(t{2}(tpext+1:tpext+t2p),Y2(tpext+1:tpext+t2p,2),'Color',tue.r)
 hold on
-plot(t{2}(1:tpext+1),Y2(1:tpext+1,2),'--r',t{2}(1:tpext+1),Yd2(1:tpext+1,2),'--b')%,t{2}(1:tpext+1),Ydd2(1:tpext+1,2),'--g')
+plot(t{2}(tpext+1:tpext+t2p),Yd2(tpext+1:tpext+t2p,2),'Color',tue.db)
+plot(t{2}(tpext+1:tpext+t2p),Ydd2(tpext+1:tpext+t2p,2),'Color',tue.c)
+plot(t{2}(1:tpext+1),Y2(1:tpext+1,2),'Color',tue.r,'LineStyle','--')
+plot(t{2}(1:tpext+1),Yd2(1:tpext+1,2),'Color',tue.db,'LineStyle','--')
+plot(t{2}(1:tpext+1),Ydd2(1:tpext+1,2),'Color',tue.c,'LineStyle','--')
 title('$q_4$','Interpreter','Latex')
 xlabel('$t$','Interpreter','Latex')
-legend('pos','vel')
+legend('$q_4 [rad]$','$\dot{q}_4 [rad/s]$','$\ddot{q}_4 [rad/s^2]$','Interpreter','Latex')
+set(gca,'FontSize',12)
 movegui('south')
 
 % figure
