@@ -32,7 +32,7 @@ end
 
 xi = [M, -J.'; J, zeros(size(J,1))]\[M*qd_min;zeros(size(J,1),1)];
 qd_plus = xi(1:4);
-Lambda  = xi(5:end);
+Lambda  = xi(5:end)
 if min(Lambda) < 0
     Lambda
     error('Infeasible impact')
