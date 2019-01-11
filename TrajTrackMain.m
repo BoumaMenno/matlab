@@ -84,92 +84,144 @@ cntrl_trc    = {@(t,x,~) mu(t,1) - K{1}*(x-alpha(t,1)), ...
 traj_trc     = HybridSim(hybsys,cntrl_trc,t0:dt:T,x0e,1);
 
 tue = tue_color;
-options.height          = 14;
-options.width           = 11;
+options.height          = 24;
+options.width           = 18;
 options.evntlines       = 1;
 options.grid            = 2;
 options.cntr            = 'num';
-options.barcolor        = [tue.db;tue.g;tue.c;tue.b];
+options.barcolor        = [tue.b;tue.y;tue.c;tue.g];
+options.Hbar            = 0.013;
 options.marker          = {'.','.';'.','.';'.','.'};
 options.markersize      = [7*ones(3,1),7*ones(3,1)];
 options.fontsize.axes   = 12;
 options.fontsize.labels = 13;
 options.fontsize.text   = 13;
-options.spacingy        = 0.02;
+options.spacingy        = 0.01;
 %% Plot reference traj
-options.linecolor       = {tue.r,tue.r};
-options.linestyle       = {':','-'};
-options.cntrbar         = [0,1];
-
-options.labels          = {'$q_1$ [rad]','$q_2$ [rad]','$q_3$ [rad]'};
-options.legend          = {'$\bar{\mathbf{\alpha}}$','$\mathbf{\alpha}$'};
-signals.x = [1,2,3];
-signals.u = [];
-grd = [3,1];
-figure
-PlotHybTraj({ref_traj_ext,ref_traj},signals,grd,options)
-movegui('northwest')
-
-options.labels          = {'$\dot{q}_1$ [rad/s]','$\dot{q}_2$ [rad/s]','$\dot{q}_3$ [rad/s]'};
-options.legend          = {'$\bar{\mathbf{\alpha}}$','$\mathbf{\alpha}$'};
-signals.x = [5,6,7];
-signals.u = [];
-grd = [3,1];
-figure
-PlotHybTraj({ref_traj_ext,ref_traj},signals,grd,options)
-movegui('north')
+% options.linecolor       = {tue.r,tue.r};
+% options.linestyle       = {':','-'};
+% options.cntrbar         = [0,1];
 % 
-options.labels          = {'$\mu_1$ [Nm]','$\mu_2$ [Nm]','$\mu_3$ [Nm]'};
-options.legend          = {'$\bar{\mathbf{\mu}}$','$\mathbf{\mu}$'};
-signals.x = [];
-signals.u = [1,2,3];
-grd = [3,1];
-figure
-PlotHybTraj({ref_traj_ext,ref_traj},signals,grd,options)
-movegui('northeast')
+% options.labels          = {'$q_1$ [rad]','$q_2$ [rad]','$q_3$ [rad]'};
+% options.legend          = {'$\bar{\mathbf{\alpha}}$','$\mathbf{\alpha}$'};
+% signals.x = [1,2,3];
+% signals.u = [];
+% grd = [3,1];
+% figure
+% PlotHybTraj({ref_traj_ext,ref_traj},signals,grd,options)
+% movegui('northwest')
+% 
+% options.labels          = {'$\dot{q}_1$ [rad/s]','$\dot{q}_2$ [rad/s]','$\dot{q}_3$ [rad/s]'};
+% options.legend          = {'$\bar{\mathbf{\alpha}}$','$\mathbf{\alpha}$'};
+% signals.x = [5,6,7];
+% signals.u = [];
+% grd = [3,1];
+% figure
+% PlotHybTraj({ref_traj_ext,ref_traj},signals,grd,options)
+% movegui('north')
+% % 
+% options.labels          = {'$\mu_1$ [Nm]','$\mu_2$ [Nm]','$\mu_3$ [Nm]'};
+% options.legend          = {'$\bar{\mathbf{\mu}}$','$\mathbf{\mu}$'};
+% signals.x = [];
+% signals.u = [1,2,3];
+% grd = [3,1];
+% figure
+% PlotHybTraj({ref_traj_ext,ref_traj},signals,grd,options)
+% movegui('northeast')
 
 % AnimSys(ref_traj.t,ref_traj.x,1)
 
 %% Plot perturbed traj
-options.linecolor       = {tue.r};
-options.linestyle       = {'-'};
-options.cntrbar         = [1];
-
-options.labels          = {'$q_1$ [rad]','$q_2$ [rad]','$q_3$ [rad]'};
-options.legend          = {'$\mathbf{x}^{\epsilon}$'};
-signals.x = [1,2,3];
-signals.u = [];
-grd = [3,1];
-figure
-PlotHybTraj({traj_trc},signals,grd,options)
-movegui('northwest')
-
-options.labels          = {'$\dot{q}_1$ [rad/s]','$\dot{q}_2$ [rad/s]','$\dot{q}_3$ [rad/s]'};
-options.legend          = {'$\mathbf{x}^{\epsilon}$'};
-signals.x = [5,6,7];
-signals.u = [];
-grd = [3,1];
-figure
-PlotHybTraj({traj_trc},signals,grd,options)
-movegui('north')
-
-options.labels          = {'$u_1$ [Nm]','$u_2$ [Nm]','$u_3$ [Nm]'};
-options.legend          = {'$\mathbf{u}$'};
-signals.x = [];
-signals.u = [1,2,3];
-grd = [3,1];
-figure
-PlotHybTraj({traj_trc},signals,grd,options)
-movegui('northeast')
-
-AnimSys(traj_trc.t,traj_trc.x,1)
+% options.linecolor       = {tue.r};
+% options.linestyle       = {'-'};
+% options.cntrbar         = [1];
+% 
+% options.labels          = {'$q_1$ [rad]','$q_2$ [rad]','$q_3$ [rad]'};
+% options.legend          = {'$\mathbf{x}^{\epsilon}$'};
+% signals.x = [1,2,3];
+% signals.u = [];
+% grd = [3,1];
+% figure
+% PlotHybTraj({traj_trc},signals,grd,options)
+% movegui('northwest')
+% 
+% options.labels          = {'$\dot{q}_1$ [rad/s]','$\dot{q}_2$ [rad/s]','$\dot{q}_3$ [rad/s]'};
+% options.legend          = {'$\mathbf{x}^{\epsilon}$'};
+% signals.x = [5,6,7];
+% signals.u = [];
+% grd = [3,1];
+% figure
+% PlotHybTraj({traj_trc},signals,grd,options)
+% movegui('north')
+% 
+% options.labels          = {'$u_1$ [Nm]','$u_2$ [Nm]','$u_3$ [Nm]'};
+% options.legend          = {'$\mathbf{u}$'};
+% signals.x = [];
+% signals.u = [1,2,3];
+% grd = [3,1];
+% figure
+% PlotHybTraj({traj_trc},signals,grd,options)
+% movegui('northeast')
+% 
+% AnimSys(traj_trc.t,traj_trc.x,1)
 
 %% Plot reference + perturbed traj
+
+options.linecolor       = {tue.r,tue.r,tue.db};
+options.linestyle       = {':','-','-'};
+options.cntrbar         = [0,1,1];
+
+% options.labels          = {'$q_1$ [rad]','$q_2$ [rad]','$q_3$ [rad]'};
+% options.legend          = {'$\bar{\mathbf{\alpha}}$','$\mathbf{\alpha}$','$\mathbf{x}^\epsilon$'};
+% signals.x = [1,2,3];
+% signals.u = [];
+% grd = [3,1];
+% figure
+% PlotHybTraj({ref_traj_ext,ref_traj,traj_trc},signals,grd,options)
+% movegui('northwest')
+% posvec = get(gca,'OuterPosition');
+% set(gca,'OuterPosition',[posvec(1), posvec(2)+0.01, posvec(3), posvec(4)]);
+% 
+% options.labels          = {'$\dot{q}_1$ [rad/s]','$\dot{q}_2$ [rad/s]','$\dot{q}_3$ [rad/s]'};
+% options.legend          = {'$\bar{\mathbf{\alpha}}$','$\mathbf{\alpha}$','$\mathbf{x}^\epsilon$'};
+% signals.x = [5,6,7];
+% signals.u = [];
+% grd = [3,1];
+% figure
+% PlotHybTraj({ref_traj_ext,ref_traj,traj_trc},signals,grd,options)
+% movegui('north')
+% posvec = get(gca,'OuterPosition');
+% set(gca,'OuterPosition',[posvec(1), posvec(2)+0.01, posvec(3), posvec(4)]);
+
+options.labels          = {'$q_1$ [rad]','$q_2$ [rad]','$q_3$ [rad]','$q_4$ [rad]','$\dot{q}_1$ [rad/s]','$\dot{q}_2$ [rad/s]','$\dot{q}_3$ [rad/s]','$\dot{q}_4$ [rad/s]'};
+options.legend          = {'$\bar{\mathbf{\alpha}}$','$\mathbf{\alpha}$','$\mathbf{x}^\epsilon$'};
+signals.x = [1,2,3,4,5,6,7,8];
+signals.u = [];
+grd = [8,1];
+figure
+PlotHybTraj({ref_traj_ext,ref_traj,traj_trc},signals,grd,options)
+movegui('northwest')
+% posvec = get(gca,'OuterPosition');
+% set(gca,'OuterPosition',[posvec(1), posvec(2)+0.01, posvec(3), posvec(4)]);
+
+
+% 
+% % 
+% options.labels          = {'$\mu_1$ [Nm]','$\mu_2$ [Nm]','$\mu_3$ [Nm]'};
+% options.legend          = {'$\bar{\mathbf{\mu}}$','$\mathbf{\mu}$','$\mathbf{u}$'};
+% signals.x = [];
+% signals.u = [1,2,3];
+% grd = [3,1];
+% figure
+% PlotHybTraj({ref_traj_ext,ref_traj,traj_trc},signals,grd,options)
+% posvec = get(gca,'OuterPosition');
+% set(gca,'OuterPosition',[posvec(1), posvec(2)+0.01, posvec(3), posvec(4)]);
+
 % AnimSysWRef(ref_traj.t,ref_traj.x,traj_trc.t,traj_trc.x,1)
 
 % 
-% Compute constraint forces
-figure
+%% Compute constraint forces
+figure('units','centimeters','position',[0,0,22,8])
 for i = 2:3
     lambda = zeros(2,length(traj_trc.t{i}));
     if traj_trc.m(i) == 1
@@ -194,11 +246,13 @@ for i = 2:3
     plot(traj_trc.t{i},lambda(2,:).','Color',tue.db,'LineWidth',2)
 end
 grid minor
+axis([1 1.2 0 20])
 legend('$\lambda_{n,1}$','$\lambda_{n,2}$','Interpreter','latex')
 xlabel('$t$ [s]','Interpreter','latex')
 ylabel('$\lambda_n$ [N]','Interpreter','latex')
 
-figure
+
+figure('units','centimeters','position',[0,0,22,8])
 for i = 2:2
     lambda = zeros(2,length(ref_traj.t{i}));
     if ref_traj.m(i) == 1
@@ -223,6 +277,7 @@ for i = 2:2
     plot(ref_traj.t{i},lambda(2,:).','Color',tue.db,'LineWidth',2)
 end
 grid minor
+axis([1 1.2 0 20])
 legend('$\lambda_{n,1}$','$\lambda_{n,2}$','Interpreter','latex')
 xlabel('$t$ [s]','Interpreter','latex')
 ylabel('$\lambda_n$ [N]','Interpreter','latex')
