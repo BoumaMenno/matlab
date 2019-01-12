@@ -1,4 +1,4 @@
-function AnimSys(time,q,showpath,filename)
+function AnimTrack(time,q,showpath,filename)
 
 %--- Animate system -------------------------------------------------------
 %    Creates an animation (schematic style) of the 3DOF planar            
@@ -13,7 +13,7 @@ function AnimSys(time,q,showpath,filename)
 %--------------------------------------------------------------------------
 
 global L1 L2 L3 L4 w3 w4 c3x d3 Dx Dy
-
+tue = tue_color;
 % Check if a video is requested or not
 if nargin == 4
     rec = 1;
@@ -122,8 +122,8 @@ for ii = 1:length(t)
     % Plot geometry
     hold on
     if showpath == 1
-        plot(x(1:ii),y(1:ii),'color',cmap(1,:),'linewidth',2)
-        plot(x(1),y(1),'.','color',cmap(2,:),'markersize',18)
+        plot(x(1:ii),y(1:ii),'color',tue.db,'linewidth',2)
+        plot(x(1),y(1),'.','color',tue.db,'markersize',18)
     end
     fill(Link3T(1,:),Link3T(2,:),col,'EdgeColor','k','linewidth',lw)
     fill(Link2T(1,:),Link2T(2,:),col,'EdgeColor','k','linewidth',lw)
@@ -131,11 +131,11 @@ for ii = 1:length(t)
     fill(DoorT(1,:),DoorT(2,:),col,'EdgeColor','k','linewidth',lw)
     
     fill(hinge(1,:)-Dx,hinge(2,:)+Dy,col,'EdgeColor','k','linewidth',lw)
-    fill(circ(1,:)/r*w4/2-Dx,circ(2,:)/r*w4/2+Dy,'k')
+    fill(circ(1,:)/r*w4/2-Dx,circ(2,:)/r*w4/2+Dy,'w','EdgeColor','k')
     fill(base(1,:),base(2,:),col,'EdgeColor','k','linewidth',lw)
-    fill(circ(1,:)+H02(1,3),circ(2,:)+H02(2,3),'k')
-    fill(circ(1,:)+H01(1,3),circ(2,:)+H01(2,3),'k')
-    fill(circ(1,:),circ(2,:),'k')
+    fill(circ(1,:)+H02(1,3),circ(2,:)+H02(2,3),'w','EdgeColor','k')
+    fill(circ(1,:)+H01(1,3),circ(2,:)+H01(2,3),'w','EdgeColor','k')
+    fill(circ(1,:),circ(2,:),'w','EdgeColor','k')
 %     
     plot([-7 7]*dx,-2*1.2*r*[1 1],'k','linewidth',lw)
     for jj = -7:7-1
@@ -146,7 +146,7 @@ for ii = 1:length(t)
     wall2 = fill(L4+[0.2 0.01 0.01 0.2 0.2]-Dx,3/4*[w4 w4 -w4 -w4 w4]+Dy,'w','EdgeColor','k','linewidth',lw);
     
     if showpath == 1
-        plot(x(ii),y(ii),'.','color',cmap(1,:),'markersize',22)
+        plot(x(ii),y(ii),'.','color',tue.db,'markersize',22)
     end
     
     % Set axis and figure properties
@@ -155,15 +155,16 @@ for ii = 1:length(t)
     xlabel('x')
     ylabel('y')
     
+    set(gca,'visible','off')
     set(gca,'Nextplot','Replacechildren')
     set(gcf,'Position',[1300 550 592 564])
     hatch(wall1,[45,5,lw],'k')
     hatch(wall2,[45,5,lw],'k')
     
     % Make snapshots
-    if mod(ii,2) == 0
-        framename = sprintf('frame%i.eps', ii/2);
-        saveas(gcf,fullfile('.\snaps', framename),'epsc')
+    if mod(ii,1) == 0
+        framename = sprintf('frame%i.eps', ii);
+        saveas(gcf,fullfile('.\tracking', framename),'epsc')
     end
     
     % Capture frame

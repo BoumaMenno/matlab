@@ -8,6 +8,7 @@ dt  = 0.01;                             % time step
 T   = t_ref{end}(end);                  % final time
 x0  = [q_ref{1}(1,:).';qd_ref{1}(1,:).']; % initial condition for reference
 Tol = 1e-6;
+fps = 30;
 
 K   = {8*[1^2*eye(3),[0;0;0],2*1*eye(3),[0;0;0]], ...
        [10^2*[1 0 0 0;0 1 0 0;0 0 0 0],2*10*[1 0 0 0;0 1 0 0;0 0 0 0]]};
@@ -129,7 +130,7 @@ options.spacingy        = 0.01;
 % PlotHybTraj({ref_traj_ext,ref_traj},signals,grd,options)
 % movegui('northeast')
 
-% AnimSys(ref_traj.t,ref_traj.x,1)
+% AnimRef(ref_traj.t,ref_traj.x,1,'ref')
 
 %% Plot perturbed traj
 % options.linecolor       = {tue.r};
@@ -160,16 +161,16 @@ options.spacingy        = 0.01;
 % signals.u = [1,2,3];
 % grd = [3,1];
 % figure
-% PlotHybTraj({traj_trc},signals,grd,options)
+% PlotHybTrajSnap({traj_trc},signals,grd,tcut,options)
 % movegui('northeast')
 % 
-% AnimSys(traj_trc.t,traj_trc.x,1)
+% AnimTrack(traj_trc.t,traj_trc.x,1,'track')
 
 %% Plot reference + perturbed traj
 
-options.linecolor       = {tue.r,tue.r,tue.db};
-options.linestyle       = {':','-','-'};
-options.cntrbar         = [0,1,1];
+% options.linecolor       = {tue.r,tue.r,tue.db};
+% options.linestyle       = {':','-','-'};
+% options.cntrbar         = [0,1,1];
 
 % options.labels          = {'$q_1$ [rad]','$q_2$ [rad]','$q_3$ [rad]'};
 % options.legend          = {'$\bar{\mathbf{\alpha}}$','$\mathbf{\alpha}$','$\mathbf{x}^\epsilon$'};
@@ -193,17 +194,14 @@ options.cntrbar         = [0,1,1];
 % posvec = get(gca,'OuterPosition');
 % set(gca,'OuterPosition',[posvec(1), posvec(2)+0.01, posvec(3), posvec(4)]);
 
-options.labels          = {'$q_1$ [rad]','$q_2$ [rad]','$q_3$ [rad]','$q_4$ [rad]','$\dot{q}_1$ [rad/s]','$\dot{q}_2$ [rad/s]','$\dot{q}_3$ [rad/s]','$\dot{q}_4$ [rad/s]'};
-options.legend          = {'$\bar{\mathbf{\alpha}}$','$\mathbf{\alpha}$','$\mathbf{x}^\epsilon$'};
-signals.x = [1,2,3,4,5,6,7,8];
-signals.u = [];
-grd = [8,1];
-figure
-PlotHybTraj({ref_traj_ext,ref_traj,traj_trc},signals,grd,options)
-movegui('northwest')
-% posvec = get(gca,'OuterPosition');
-% set(gca,'OuterPosition',[posvec(1), posvec(2)+0.01, posvec(3), posvec(4)]);
-
+% options.labels          = {'$q_1$ [rad]','$q_2$ [rad]','$q_3$ [rad]','$q_4$ [rad]','$\dot{q}_1$ [rad/s]','$\dot{q}_2$ [rad/s]','$\dot{q}_3$ [rad/s]','$\dot{q}_4$ [rad/s]'};
+% options.legend          = {'$\bar{\mathbf{\alpha}}$','$\mathbf{\alpha}$','$\mathbf{x}^\epsilon$'};
+% signals.x = [1,2,3,4,5,6,7,8];
+% signals.u = [];
+% grd = [8,1];
+% figure
+% PlotHybTraj({ref_traj_ext,ref_traj,traj_trc},signals,grd,options)
+% movegui('northwest')
 
 % 
 % % 
@@ -220,64 +218,98 @@ movegui('northwest')
 % AnimSysWRef(ref_traj.t,ref_traj.x,traj_trc.t,traj_trc.x,1)
 
 % 
+
+%% Plot snaps
+options.linecolor       = {tue.r};
+options.marker          = {'none','none'};
+options.linestyle       = {'-'};
+options.cntrbar         = [0];
+options.showlegend      = 0;
+options.height          = 4;
+options.width           = 10;
+options.evntlines       = 0;
+options.grid            = 0;
+signals.x = [5];
+signals.u = [];
+grd = [1,1];
+
+for i = 1:T*fps
+    tcut = (1/fps)*i;
+    PlotHybTrajSnap({ref_traj},signals,grd,tcut-dt,options)
+    axis([0 2 -1 2])
+    framename = sprintf('refsnap_t%i.eps', round(tcut*100,0))
+    saveas(gcf,fullfile('.\reference', framename),'epsc')
+end
+
+options.linecolor       = {tue.db};
+
+% for i = 1:T*fps
+%     tcut = (1/fps)*i;
+tcut = 1.05;
+    PlotHybTrajSnap({traj_trc},signals,grd,tcut-dt,options)
+    axis([0 2 -1 2])
+    framename = sprintf('trcsnap_t%i.eps', round(tcut*100,0))
+    saveas(gcf,fullfile('.\tracking', framename),'epsc')
+% end
+
 %% Compute constraint forces
-figure('units','centimeters','position',[0,0,22,8])
-for i = 2:3
-    lambda = zeros(2,length(traj_trc.t{i}));
-    if traj_trc.m(i) == 1
-        for j = 1:length(traj_trc.t{i})
-            [~,lambda(:,j)] = VecField(traj_trc.x{i}(j,1:8).',traj_trc.u{i}(j,:).',0,0);
-        end
-    elseif traj_trc.m(i) == 2
-        for j = 1:length(traj_trc.t{i})
-            [~,lambda(:,j)] = VecField(traj_trc.x{i}(j,1:8).',traj_trc.u{i}(j,:).',1,0);
-        end
-    elseif traj_trc.m(i) == 3
-        for j = 1:length(traj_trc.t{i})
-            [~,lambda(:,j)] = VecField(traj_trc.x{i}(j,1:8).',traj_trc.u{i}(j,:).',0,1);
-        end
-    else
-        for j = 1:length(traj_trc.t{i})
-            [~,lambda(:,j)] = VecField(traj_trc.x{i}(j,1:8).',traj_trc.u{i}(j,:).',1,1);
-        end
-    end
-    plot(traj_trc.t{i},lambda(1,:).','Color',tue.r,'LineWidth',2)
-    hold on
-    plot(traj_trc.t{i},lambda(2,:).','Color',tue.db,'LineWidth',2)
-end
-grid minor
-axis([1 1.2 0 20])
-legend('$\lambda_{n,1}$','$\lambda_{n,2}$','Interpreter','latex')
-xlabel('$t$ [s]','Interpreter','latex')
-ylabel('$\lambda_n$ [N]','Interpreter','latex')
-
-
-figure('units','centimeters','position',[0,0,22,8])
-for i = 2:2
-    lambda = zeros(2,length(ref_traj.t{i}));
-    if ref_traj.m(i) == 1
-        for j = 1:length(ref_traj.t{i})
-            [~,lambda(:,j)] = VecField(ref_traj.x{i}(j,1:8).',ref_traj.u{i}(j,:).',0,0);
-        end
-    elseif ref_traj.m(i) == 2
-        for j = 1:length(ref_traj.t{i})
-            [~,lambda(:,j)] = VecField(ref_traj.x{i}(j,1:8).',ref_traj.u{i}(j,:).',1,0);
-        end
-    elseif ref_traj.m(i) == 3
-        for j = 1:length(ref_traj.t{i})
-            [~,lambda(:,j)] = VecField(ref_traj.x{i}(j,1:8).',ref_traj.u{i}(j,:).',0,1);
-        end
-    else
-        for j = 1:length(ref_traj.t{i})
-            [~,lambda(:,j)] = VecField(ref_traj.x{i}(j,1:8).',ref_traj.u{i}(j,:).',1,1);
-        end
-    end
-    plot(ref_traj.t{i},lambda(1,:).','Color',tue.r,'LineWidth',2)
-    hold on
-    plot(ref_traj.t{i},lambda(2,:).','Color',tue.db,'LineWidth',2)
-end
-grid minor
-axis([1 1.2 0 20])
-legend('$\lambda_{n,1}$','$\lambda_{n,2}$','Interpreter','latex')
-xlabel('$t$ [s]','Interpreter','latex')
-ylabel('$\lambda_n$ [N]','Interpreter','latex')
+% figure('units','centimeters','position',[0,0,22,8])
+% for i = 2:3
+%     lambda = zeros(2,length(traj_trc.t{i}));
+%     if traj_trc.m(i) == 1
+%         for j = 1:length(traj_trc.t{i})
+%             [~,lambda(:,j)] = VecField(traj_trc.x{i}(j,1:8).',traj_trc.u{i}(j,:).',0,0);
+%         end
+%     elseif traj_trc.m(i) == 2
+%         for j = 1:length(traj_trc.t{i})
+%             [~,lambda(:,j)] = VecField(traj_trc.x{i}(j,1:8).',traj_trc.u{i}(j,:).',1,0);
+%         end
+%     elseif traj_trc.m(i) == 3
+%         for j = 1:length(traj_trc.t{i})
+%             [~,lambda(:,j)] = VecField(traj_trc.x{i}(j,1:8).',traj_trc.u{i}(j,:).',0,1);
+%         end
+%     else
+%         for j = 1:length(traj_trc.t{i})
+%             [~,lambda(:,j)] = VecField(traj_trc.x{i}(j,1:8).',traj_trc.u{i}(j,:).',1,1);
+%         end
+%     end
+%     plot(traj_trc.t{i},lambda(1,:).','Color',tue.r,'LineWidth',2)
+%     hold on
+%     plot(traj_trc.t{i},lambda(2,:).','Color',tue.db,'LineWidth',2)
+% end
+% grid minor
+% axis([1 1.2 0 20])
+% legend('$\lambda_{n,1}$','$\lambda_{n,2}$','Interpreter','latex')
+% xlabel('$t$ [s]','Interpreter','latex')
+% ylabel('$\lambda_n$ [N]','Interpreter','latex')
+% 
+% 
+% figure('units','centimeters','position',[0,0,22,8])
+% for i = 2:2
+%     lambda = zeros(2,length(ref_traj.t{i}));
+%     if ref_traj.m(i) == 1
+%         for j = 1:length(ref_traj.t{i})
+%             [~,lambda(:,j)] = VecField(ref_traj.x{i}(j,1:8).',ref_traj.u{i}(j,:).',0,0);
+%         end
+%     elseif ref_traj.m(i) == 2
+%         for j = 1:length(ref_traj.t{i})
+%             [~,lambda(:,j)] = VecField(ref_traj.x{i}(j,1:8).',ref_traj.u{i}(j,:).',1,0);
+%         end
+%     elseif ref_traj.m(i) == 3
+%         for j = 1:length(ref_traj.t{i})
+%             [~,lambda(:,j)] = VecField(ref_traj.x{i}(j,1:8).',ref_traj.u{i}(j,:).',0,1);
+%         end
+%     else
+%         for j = 1:length(ref_traj.t{i})
+%             [~,lambda(:,j)] = VecField(ref_traj.x{i}(j,1:8).',ref_traj.u{i}(j,:).',1,1);
+%         end
+%     end
+%     plot(ref_traj.t{i},lambda(1,:).','Color',tue.r,'LineWidth',2)
+%     hold on
+%     plot(ref_traj.t{i},lambda(2,:).','Color',tue.db,'LineWidth',2)
+% end
+% grid minor
+% axis([1 1.2 0 20])
+% legend('$\lambda_{n,1}$','$\lambda_{n,2}$','Interpreter','latex')
+% xlabel('$t$ [s]','Interpreter','latex')
+% ylabel('$\lambda_n$ [N]','Interpreter','latex')
